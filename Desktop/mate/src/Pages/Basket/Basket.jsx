@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+/* eslint-disable react-refresh/only-export-components */
+import { useEffect, useState, memo } from "react";
 import { FaWindowClose } from "react-icons/fa";
 
 /* eslint-disable react/prop-types */
@@ -59,10 +60,9 @@ const Basket = (props) => {
                     </article>
                 ))}
                 <div>ALL {allSum} $</div>
-                {basketData.length === 0 && <div>Корзина пуста</div>}
             </div>
         </section>
     );
 };
 
-export default Basket;
+export default memo(Basket);

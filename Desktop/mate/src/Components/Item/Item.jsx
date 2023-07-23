@@ -1,4 +1,7 @@
+/* eslint-disable no-undef */
 /* eslint-disable react/prop-types */
+import { memo } from "react";
+// eslint-disable-next-line react-refresh/only-export-components
 const Item = (props) => {
     const { el, addToBasket } = props;
     return (
@@ -14,11 +17,12 @@ const Item = (props) => {
                         addToBasket(el);
                     }}
                 >
-                    +
+                    Add
                 </div>
             </div>
         </article>
     );
 };
 
-export default Item;
+// eslint-disable-next-line react-refresh/only-export-components
+export default memo(Item);

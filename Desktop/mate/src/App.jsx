@@ -1,71 +1,81 @@
-import { useEffect, useState } from "react";
+import { useState, memo, useCallback, useMemo } from "react";
 import "./App.css";
-import Categories from "./categories/Categories";
-import Footer from "./footer/Footer";
-import Header from "./header/Header";
-import Menu from "./header/Menu";
-import HowToBuy from "./how-to-buy/HowToBuy";
-import Recomended from "./recomended/Recomended";
-import Basket from "./basket/Basket";
+import Categories from "./Pages/categories/Categories";
+import Footer from "./Pages/Footer/Footer";
+import Header from "./Pages/Header/Header";
+import Menu from "./Pages/Header/Menu";
+import HowToBuy from "./Pages/How-to-buy/HowToBuy";
+import Recomended from "./Pages/Recomended/Recomended";
+import Basket from "./Pages/basket/Basket";
 import { FaShoppingCart } from "react-icons/fa";
+// eslint-disable-next-line react-refresh/only-export-components
 const App = () => {
     const [basketData, setBasketData] = useState([]);
     const [isOpenBasket, setIsOpenBasket] = useState(false);
     const [number, setNumber] = useState(0);
-    useEffect(() => {
-        const CountTheNumber = () => {
-            let count = 0;
-            basketData.forEach((el) => {
-                count += Number(el.count);
-            });
-            setNumber(count);
-        };
-        CountTheNumber();
-    }, [basketData]);
-    const addToBasket = (item) => {
-        if (basketData.length === 0) {
-            setBasketData([item]);
-            setIsOpenBasket(false);
-        }
-        if (basketData.length > 0) {
-            let newData = [];
-            newData = basketData.map((el) => {
-                return el.id === item.id ? { ...el, count: el.count + 1 } : el;
-            });
-            setBasketData(newData);
-        }
-        let isInBasket = basketData.some((el) => {
-            return el.id === item.id;
+
+    useMemo(() => {
+        let count = 0;
+        basketData.forEach((el) => {
+            count += Number(el.count);
         });
-        isInBasket ? basketData : setBasketData([...basketData, item]);
-    };
-    const decrement = (item) => {
-        if (basketData.length > 0) {
-            let newData = [];
-            newData = basketData.map((el) => {
-                if (el.count > 0) {
-                    return el.id === item.id ? { ...el, count: el.count - 1 } : el;
-                } else {
-                    return el.id === item.id ? { ...el, count: (el.count = 0) } : el;
-                }
+        return setNumber(count);
+    }, [setNumber, basketData]);
+
+    const addToBasket = useCallback(
+        (item) => {
+            if (basketData.length === 0) {
+                setBasketData([item]);
+                setIsOpenBasket(false);
+            }
+            if (basketData.length > 0) {
+                setBasketData(
+                    basketData.map((el) => {
+                        return el.id === item.id ? { ...el, count: el.count + 1 } : el;
+                    })
+                );
+            }
+            let isInBasket = basketData.some((el) => {
+                return el.id === item.id;
             });
-            setBasketData(newData);
-        }
-    };
-    const deleteInBasket = (item) => {
-        let newData = [];
-        newData = basketData.filter((el) => {
-            return el.id !== item.id;
-        });
-        setBasketData(newData);
-    };
+            isInBasket ? basketData : setBasketData([...basketData, item]);
+        },
+        [basketData]
+    );
+    const decrement = useCallback(
+        (item) => {
+            if (basketData.length > 0) {
+                setBasketData(
+                    basketData.map((el) => {
+                        if (el.count > 0) {
+                            return el.id === item.id ? { ...el, count: el.count - 1 } : el;
+                        } else {
+                            return el.id === item.id ? { ...el, count: (el.count = 0) } : el;
+                        }
+                    })
+                );
+            }
+        },
+        [basketData]
+    );
+
+    const deleteInBasket = useCallback(
+        (item) => {
+            setBasketData(
+                basketData.filter((el) => {
+                    return el.id !== item.id;
+                })
+            );
+        },
+        [basketData]
+    );
 
     return (
         <div id='Home'>
             <Header />
             <Menu />
             <main className='main'>
-                <Recomended addToBasket={addToBasket} />
+                <Recomended addToBasket={addToBasket} basketData={basketData} />
                 <Categories />
                 <HowToBuy />
                 {basketData.length > 0 && (
@@ -88,4 +98,5 @@ const App = () => {
     );
 };
 
-export default App;
+// eslint-disable-next-line react-refresh/only-export-components
+export default memo(App);

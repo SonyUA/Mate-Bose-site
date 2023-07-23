@@ -1,3 +1,5 @@
+import { memo } from "react";
+// eslint-disable-next-line react-refresh/only-export-components
 const Menu = () => {
     return (
         <div className='menu' id='menu'>
@@ -25,4 +27,5 @@ const Menu = () => {
     );
 };
 
-export default Menu;
+// eslint-disable-next-line react-refresh/only-export-components
+export default memo(Menu);

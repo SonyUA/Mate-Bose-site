@@ -1,3 +1,5 @@
+import { memo } from "react";
+// eslint-disable-next-line react-refresh/only-export-components
 const Header = () => {
     return (
         <header className='header'>
@@ -19,4 +21,5 @@ const Header = () => {
     );
 };
 
-export default Header;
+// eslint-disable-next-line react-refresh/only-export-components
+export default memo(Header);
