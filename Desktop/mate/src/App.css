@@ -116,7 +116,9 @@ body {
 
 .product__photo {
     width: 100%;
-    margin-bottom: 32px;
+    object-fit: contain;
+    height: 100%;
+
 }
 
 .product__title {
@@ -145,9 +147,9 @@ body {
 
 .product__plus {
     background-color: #b8c9e6;
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
+    width: auto;
+    height: auto;
+    border-radius: 5px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -157,9 +159,17 @@ body {
 }
 
 .product__plus:hover {
-    transform: rotate(180deg) scale(1.2);
+    transform: scale(1.2);
     box-shadow: 1px 1px 21px 1px rgba(184, 201, 230, 0.48);
 }
+
+.product__img__box {
+    width: 250px;
+    height: 250px;
+    margin-bottom: 32px;
+}
+
+
 
 .categories {
     max-width: 1020px;
@@ -286,6 +296,23 @@ body {
     font-size: 26px;
     padding-left: 15px;
     cursor: pointer;
+}
+
+.basket__img__box {
+    width: 250px;
+    height: 250px;
+    margin-bottom: 32px;
+}
+
+.basket__product {
+    flex-basis: 324px;
+    margin-bottom: 25px;
+}
+
+.basket__product__photo {
+    width: 100%;
+    object-fit: contain;
+    height: 100%;
 }
 
 .basket__delete {

@@ -1,16 +1,42 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/prop-types */
-import { memo } from "react";
+import { useContext, useEffect, useState } from "react";
+import { StateContext } from "../../App";
+import { FuncContext } from "../../App";
 import Item from "../../Components/item/Item";
-import { products } from "../../Api/products";
 
-// eslint-disable-next-line react-refresh/only-export-components
-const Recomended = (props) => {
-    const { addToBasket, basketData } = props;
+// eslint-disable-next-line react-refresh/only-export-components, no-unused-vars
+
+const Recomended = () => {
+    const { basketData } = useContext(StateContext);
+    const { addToBasket } = useContext(FuncContext);
+    const [dataApi, setDataApi] = useState([]);
+
+    useEffect(() => {
+        const getApi = async () => {
+            try {
+                const response = await fetch("https://fakestoreapi.com/products");
+                if (!response) {
+                    throw new Error("something terrible happened");
+                }
+                const data = await response.json();
+                const newData = data.map((el) => {
+                    return { ...el, count: 1 };
+                });
+                console.log("new", newData);
+                setDataApi(newData);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        getApi();
+    }, []);
+
     return (
         <section className='recomended' id='recommended'>
             <h2 className='recomended__title'>Recommended</h2>
             <div className='recomended__products'>
-                {products.map((el) => (
+                {dataApi.map((el) => (
                     <Item key={el.id} el={el} addToBasket={addToBasket} basketData={basketData} />
                 ))}
             </div>
@@ -19,4 +45,4 @@ const Recomended = (props) => {
 };
 
 // eslint-disable-next-line react-refresh/only-export-components
-export default memo(Recomended);
+export default Recomended;

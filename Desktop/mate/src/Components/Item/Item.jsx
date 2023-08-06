@@ -1,12 +1,15 @@
 /* eslint-disable no-undef */
 /* eslint-disable react/prop-types */
-import { memo } from "react";
+import { memo, useState } from "react";
 // eslint-disable-next-line react-refresh/only-export-components
 const Item = (props) => {
-    const { el, addToBasket } = props;
+    const { el, addToBasket, basketData } = props;
+    const [added, setAdded] = useState(true);
     return (
         <article className='product'>
-            <img src={el.img} alt={el.img.slice(0, -3)} className='product__photo' />
+            <div className='product__img__box'>
+                <img src={el.image} alt={el.image.slice(0, -3)} className='product__photo' />
+            </div>
             <h3 className='product__title'>{el.title}</h3>
             <p className='product__category'>{el.category}</p>
             <div className='product__inner'>
@@ -14,10 +17,11 @@ const Item = (props) => {
                 <div
                     className='product__plus'
                     onClick={() => {
+                        setAdded(false);
                         addToBasket(el);
                     }}
                 >
-                    Add
+                    {added || basketData.length === 0 ? "Add" : "Added"}
                 </div>
             </div>
         </article>

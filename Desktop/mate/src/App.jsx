@@ -1,4 +1,4 @@
-import { useState, memo, useCallback, useMemo } from "react";
+import { useState, memo, useCallback, useMemo, createContext } from "react";
 import "./App.css";
 import Categories from "./Pages/categories/Categories";
 import Footer from "./Pages/Footer/Footer";
@@ -8,6 +8,9 @@ import HowToBuy from "./Pages/How-to-buy/HowToBuy";
 import Recomended from "./Pages/Recomended/Recomended";
 import Basket from "./Pages/basket/Basket";
 import { FaShoppingCart } from "react-icons/fa";
+
+export const StateContext = createContext(null);
+export const FuncContext = createContext();
 // eslint-disable-next-line react-refresh/only-export-components
 const App = () => {
     const [basketData, setBasketData] = useState([]);
@@ -20,7 +23,7 @@ const App = () => {
             count += Number(el.count);
         });
         return setNumber(count);
-    }, [setNumber, basketData]);
+    }, [basketData]);
 
     const addToBasket = useCallback(
         (item) => {
@@ -42,6 +45,7 @@ const App = () => {
         },
         [basketData]
     );
+
     const decrement = useCallback(
         (item) => {
             if (basketData.length > 0) {
@@ -70,31 +74,36 @@ const App = () => {
         [basketData]
     );
 
+    const states = { basketData, setIsOpenBasket };
+    const functions = { basketData, addToBasket, decrement, deleteInBasket };
+
     return (
-        <div id='Home'>
-            <Header />
-            <Menu />
-            <main className='main'>
-                <Recomended addToBasket={addToBasket} basketData={basketData} />
-                <Categories />
-                <HowToBuy />
-                {basketData.length > 0 && (
-                    <div className='fa__box'>
-                        <span className='fa__count'>{number}</span>
-                        <FaShoppingCart
-                            className='ShoppingCart'
-                            onClick={() => {
-                                setIsOpenBasket(!isOpenBasket);
-                            }}
-                        />
-                    </div>
-                )}
-                {isOpenBasket && basketData.length > 0 && (
-                    <Basket basketData={basketData} addToBasket={addToBasket} decrement={decrement} deleteInBasket={deleteInBasket} setIsOpenBasket={setIsOpenBasket} />
-                )}
-            </main>
-            <Footer />
-        </div>
+        <FuncContext.Provider value={functions}>
+            <StateContext.Provider value={states}>
+                <div id='Home'>
+                    <Header />
+                    <Menu />
+                    <main className='main'>
+                        <Recomended />
+                        <Categories />
+                        <HowToBuy />
+                        {basketData.length > 0 && (
+                            <div className='fa__box'>
+                                <span className='fa__count'>{number}</span>
+                                <FaShoppingCart
+                                    className='ShoppingCart'
+                                    onClick={() => {
+                                        setIsOpenBasket(!isOpenBasket);
+                                    }}
+                                />
+                            </div>
+                        )}
+                        {isOpenBasket && basketData.length > 0 && <Basket />}
+                    </main>
+                    <Footer />
+                </div>
+            </StateContext.Provider>
+        </FuncContext.Provider>
     );
 };
 

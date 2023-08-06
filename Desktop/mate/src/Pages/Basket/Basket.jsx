@@ -1,18 +1,23 @@
 /* eslint-disable react-refresh/only-export-components */
-import { useEffect, useState, memo } from "react";
+import { useState, memo, useMemo, useContext } from "react";
 import { FaWindowClose } from "react-icons/fa";
-
+import { StateContext } from "../../App";
+import { FuncContext } from "../../App";
 /* eslint-disable react/prop-types */
-const Basket = (props) => {
-    const { basketData, addToBasket, decrement, deleteInBasket, setIsOpenBasket } = props;
+const Basket = () => {
+    const { setIsOpenBasket } = useContext(StateContext);
+    const { basketData, addToBasket, decrement, deleteInBasket } = useContext(FuncContext);
     const [allSum, setAllSum] = useState(0);
-    useEffect(() => {
-        let newAllSum = 0;
-        basketData.forEach((el) => {
-            newAllSum += Number(el.price.slice(1) * el.count);
-        });
+
+    useMemo(() => {
+        let newAllSum = basketData.reduce((sum, el) => {
+            sum += el.price * el.count;
+            return sum;
+        }, 0);
+        console.log("NewAllSum", newAllSum);
         setAllSum(newAllSum);
     }, [basketData]);
+
     return (
         <section className='basket'>
             <div className='basket__inner'>
@@ -24,11 +29,13 @@ const Basket = (props) => {
                 />
                 {basketData.map((el) => (
                     <article key={el.id} className='basket__product'>
-                        <img src={el.img} alt={el.img.slice(0, -3)} className='basket__product__photo' />
+                        <div className='basket__img__box'>
+                            <img src={el.image} alt={el.image.slice(0, -3)} className='basket__product__photo' />
+                        </div>
                         <h3 className='basket__product__title'>{el.title}</h3>
                         <p className='basket__product__category'>{el.category}</p>
                         <div className='basket__product__inner'>
-                            <p className='basket__product__price'>{el.price}</p>
+                            <p className='basket__product__price'>{el.price} $</p>
                         </div>
                         <p>
                             <span
